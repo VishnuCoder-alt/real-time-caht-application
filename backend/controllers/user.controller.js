@@ -3,17 +3,19 @@ import * as userService from '../services/user.service.js';
 import { validationResult } from 'express-validator';
 import redisClient from '../services/redis.service.js';
 
-
+//here this valide data entered by input user
 export const createUserController = async (req, res) => {
 
     const errors = validationResult(req);
+   // errors empty is equal to no errors
 
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
     try {
+        // we sending this to userservice file 
         const user = await userService.createUser(req.body);
-
+        // this is to genrate token
         const token = await user.generateJWT();
 
         delete user._doc.password;
